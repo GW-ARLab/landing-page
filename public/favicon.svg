@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#0A0F1E"/>
+  <!-- Outer ring -->
+  <circle cx="32" cy="32" r="22" stroke="#3B82F6" stroke-width="2" stroke-dasharray="4 3" opacity="0.5"/>
+  <!-- Inner elements -->
+  <circle cx="32" cy="32" r="8" fill="#3B82F6" opacity="0.9"/>
+  <!-- Spokes -->
+  <path d="M32 10v8M32 46v8M10 32h8M46 32h8" stroke="#06B6D4" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M17.7 17.7l5.7 5.7M40.6 40.6l5.7 5.7M17.7 46.3l5.7-5.7M40.6 23.4l5.7-5.7" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <!-- Center dot -->
+  <circle cx="32" cy="32" r="3" fill="white"/>
+</svg>

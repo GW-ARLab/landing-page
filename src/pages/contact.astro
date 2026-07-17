@@ -1,0 +1,369 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import { siteConfig } from '@/lib/site';
+
+const inquiryTypes = [
+  { value: 'product-demo', label: 'Product Demo' },
+  { value: 'product-support', label: 'Product Support' },
+  { value: 'enterprise-workflow', label: 'Enterprise Workflow' },
+  { value: 'research-collaboration', label: 'Research Collaboration' },
+  { value: 'partnership', label: 'Partnership' },
+  { value: 'general', label: 'General Inquiry' },
+];
+
+const products = [
+  { value: '', label: 'Not product-specific' },
+  { value: 'workflow-agent', label: 'Workflow Agent' },
+  { value: 'printing-3d-models', label: '3D Printing Solutions' },
+  { value: 'autonomous-robot-vehicle', label: 'Autonomous Robot Vehicle' },
+];
+
+// Pre-fill from URL params (server-side in Astro would need a different approach,
+// but we handle it client-side with JS below)
+---
+
+<PageLayout
+  title="Contact"
+  description="Contact Applied Robotics Lab — request a demo, ask about products, or explore research collaboration."
+  breadcrumbs={[{ label: 'Contact', href: '/contact', i18nKey: 'nav.contact' }]}
+>
+  <!-- Header -->
+  <section class="relative py-16 lg:py-20 bg-navy-900 overflow-hidden">
+    <div class="absolute inset-0 bg-grid-pattern opacity-50" aria-hidden="true"></div>
+    <div class="glow-blue w-[400px] h-[400px] top-0 left-1/4 opacity-20" aria-hidden="true"></div>
+
+    <div class="container-narrow relative z-10 text-center">
+      <div class="section-label justify-center mb-4"><span data-i18n="nav.contact">Contact</span></div>
+      <h1 class="text-4xl sm:text-5xl font-black mb-5 text-slate-900" data-i18n-html="contact.hero.h1.html">
+        Let's talk <span class="text-gradient-electric">robots & AI</span>
+      </h1>
+      <p class="text-xl text-slate-600" data-i18n="contact.hero.desc">
+        Tell us what you're working on. We'll get back to you within 1–2 business days.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact form + info -->
+  <section class="section bg-navy-900">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+          <form
+            id="contact-form"
+            class="space-y-6"
+            novalidate
+            aria-label="Contact form"
+          >
+            <!-- Honeypot (hidden from real users) -->
+            <div class="hidden" aria-hidden="true">
+              <label for="website">Website (leave blank)</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <!-- Full name -->
+              <div>
+                <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5" data-i18n="contact.form.name.label">
+                  Full name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  autocomplete="name"
+                  placeholder="Your name"
+                  data-i18n-placeholder="contact.form.name.placeholder"
+                  class="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-colors text-sm"
+                />
+                <p class="text-xs text-red-400 mt-1 hidden" id="name-error" role="alert" aria-live="polite"></p>
+              </div>
+
+              <!-- Work email -->
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5" data-i18n="contact.form.email.label">
+                  Work email *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  placeholder="you@company.com"
+                  data-i18n-placeholder="contact.form.email.placeholder"
+                  class="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-colors text-sm"
+                />
+                <p class="text-xs text-red-400 mt-1 hidden" id="email-error" role="alert" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <!-- Company -->
+            <div>
+              <label for="company" class="block text-sm font-medium text-slate-700 mb-1.5" data-i18n="contact.form.company.label">
+                Company / Organization
+              </label>
+              <input
+                type="text"
+                id="company"
+                name="company"
+                autocomplete="organization"
+                placeholder="Your company or university"
+                data-i18n-placeholder="contact.form.company.placeholder"
+                class="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-colors text-sm"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <!-- Inquiry type -->
+              <div>
+                <label for="inquiry-type" class="block text-sm font-medium text-slate-700 mb-1.5" data-i18n="contact.form.inquiry.label">
+                  Inquiry type *
+                </label>
+                <select
+                  id="inquiry-type"
+                  name="inquiry_type"
+                  required
+                  class="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-colors text-sm cursor-pointer"
+                >
+                  <option value="" disabled selected data-i18n="contact.form.inquiry.select">Select inquiry type</option>
+                  {inquiryTypes.map((t) => (
+                    <option value={t.value} data-i18n={`contact.inquiry.${t.value}`}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <!-- Product of interest -->
+              <div>
+                <label for="product" class="block text-sm font-medium text-slate-700 mb-1.5" data-i18n="contact.form.product.label">
+                  Product of interest
+                </label>
+                <select
+                  id="product"
+                  name="product"
+                  class="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-colors text-sm cursor-pointer"
+                >
+                  {products.map((p) => (
+                    <option value={p.value} data-i18n={p.value ? `product.${p.value}.name` : 'contact.form.product.select'}>{p.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label for="message" class="block text-sm font-medium text-slate-700 mb-1.5" data-i18n="contact.form.message.label">
+                Message *
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={5}
+                placeholder="Tell us about your project, goals, or question..."
+                data-i18n-placeholder="contact.form.message.placeholder"
+                class="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-electric-500 transition-colors text-sm resize-y"
+              ></textarea>
+              <p class="text-xs text-red-400 mt-1 hidden" id="message-error" role="alert" aria-live="polite"></p>
+            </div>
+
+            <!-- Consent -->
+            <div class="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="consent"
+                name="consent"
+                required
+                class="mt-0.5 w-4 h-4 rounded border-electric-500/30 bg-navy-700 text-electric-500 focus:ring-electric-500 cursor-pointer"
+              />
+              <label for="consent" class="text-sm text-slate-600 leading-relaxed cursor-pointer">
+                <span data-i18n="contact.form.consent">I agree that ARL may contact me about my inquiry. I've read the</span>
+                <a href="/privacy-policy" class="text-electric-600 hover:text-electric-800 underline underline-offset-2" data-i18n="contact.form.privacy.link">Privacy Policy</a>.
+                <span class="text-spark-600" aria-hidden="true"> *</span>
+              </label>
+            </div>
+
+            <!-- Submit -->
+            <div>
+              <button
+                type="submit"
+                id="submit-btn"
+                class="btn-primary btn-lg w-full sm:w-auto justify-center"
+              >
+                <span data-i18n="contact.form.submit">Send Message</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Status messages -->
+            <div
+              id="form-success"
+              class="hidden p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm"
+              role="status"
+              aria-live="polite"
+              data-i18n="contact.form.success"
+            >
+              ✅ Message sent! We'll get back to you within 1–2 business days.
+            </div>
+            <div
+              id="form-error"
+              class="hidden p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
+              role="alert"
+              aria-live="polite"
+              data-i18n-html="contact.form.error"
+            >
+              Something went wrong. Please try again or email us directly at
+              <a href="mailto:hello@arl.lab" class="underline">hello@arl.lab</a>.
+            </div>
+          </form>
+        </div>
+
+        <!-- Contact info -->
+        <div class="space-y-6">
+          <div class="card bg-white border border-slate-200">
+            <h2 class="font-bold text-slate-900 mb-4" data-i18n="contact.sidebar.direct">Direct contact</h2>
+            <div class="space-y-3">
+              <a href="mailto:hello@arl.lab" class="flex items-center gap-3 text-sm text-slate-600 hover:text-electric-600 transition-colors group">
+                <div class="w-8 h-8 rounded-lg bg-electric-50 border border-electric-100 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-electric-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                hello@arl.lab
+              </a>
+              <a href="https://github.com/applied-robotics-lab" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-sm text-slate-600 hover:text-electric-600 transition-colors">
+                <div class="w-8 h-8 rounded-lg bg-electric-50 border border-electric-100 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-electric-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                </div>
+                <span data-i18n="contact.sidebar.github">GitHub (opens in new tab)</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Response time -->
+          <div class="card bg-white border border-slate-200">
+            <h2 class="font-bold text-slate-900 mb-3" data-i18n="contact.sidebar.response.title">Response time</h2>
+            <p class="text-slate-600 text-sm leading-relaxed" data-i18n-html="contact.sidebar.response.desc.html">
+              We typically respond within <strong class="text-slate-900">1–2 business days</strong>.
+              For urgent matters, email us directly.
+            </p>
+          </div>
+
+          <!-- Quick links -->
+          <div class="card bg-white border border-slate-200">
+            <h2 class="font-bold text-slate-900 mb-3" data-i18n="contact.sidebar.quick.title">Quick inquiries</h2>
+            <div class="space-y-2">
+              {[
+                { label: 'Request a Demo', href: '/contact?type=product-demo', key: 'demo' },
+                { label: 'Enterprise Automation', href: '/contact?type=enterprise-workflow', key: 'enterprise' },
+                { label: 'Research Partnership', href: '/contact?type=research-collaboration', key: 'research' },
+              ].map((link) => (
+                <a href={link.href} class="flex items-center justify-between text-sm text-slate-600 hover:text-electric-600 transition-colors py-1">
+                  <span data-i18n={`contact.sidebar.quick.${link.key}`}>{link.label}</span>
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  // Pre-fill from query params
+  const params = new URLSearchParams(window.location.search);
+
+  const typeParam = params.get('type');
+  if (typeParam) {
+    const typeMap: Record<string, string> = {
+      'request-demo': 'product-demo',
+      'request-access': 'product-demo',
+      'research-collaboration': 'research-collaboration',
+      'enterprise-workflow': 'enterprise-workflow',
+      'product-inquiry': 'product-demo',
+      'partnership': 'partnership',
+    };
+    const selectEl = document.getElementById('inquiry-type') as HTMLSelectElement | null;
+    if (selectEl) selectEl.value = typeMap[typeParam] ?? typeParam;
+  }
+
+  const productParam = params.get('product');
+  if (productParam) {
+    const selectEl = document.getElementById('product') as HTMLSelectElement | null;
+    if (selectEl) selectEl.value = productParam;
+  }
+
+  // Form validation & submission
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('submit-btn');
+  const successEl = document.getElementById('form-success');
+  const errorEl = document.getElementById('form-error');
+
+  function showError(fieldId: string, message: string) {
+    const el = document.getElementById(`${fieldId}-error`);
+    if (el) {
+      el.textContent = message;
+      el.classList.remove('hidden');
+    }
+    const input = document.getElementById(fieldId);
+    input?.classList.add('border-red-500/50');
+  }
+
+  function clearError(fieldId: string) {
+    const el = document.getElementById(`${fieldId}-error`);
+    if (el) el.classList.add('hidden');
+    const input = document.getElementById(fieldId);
+    input?.classList.remove('border-red-500/50');
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form) return;
+
+    // Honeypot check
+    const honeypot = (document.getElementById('website') as HTMLInputElement)?.value;
+    if (honeypot) return; // Silent fail for bots
+
+    // Client-side validation
+    let valid = true;
+
+    const name = (document.getElementById('name') as HTMLInputElement)?.value.trim();
+    if (!name) { showError('name', 'Name is required.'); valid = false; } else clearError('name');
+
+    const email = (document.getElementById('email') as HTMLInputElement)?.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) { showError('email', 'Valid email is required.'); valid = false; } else clearError('email');
+
+    const message = (document.getElementById('message') as HTMLTextAreaElement)?.value.trim();
+    if (!message || message.length < 10) { showError('message', 'Message must be at least 10 characters.'); valid = false; } else clearError('message');
+
+    if (!valid) return;
+
+    // Submit (MVP: show success state — replace with actual API call)
+    submitBtn?.setAttribute('disabled', 'true');
+    submitBtn?.classList.add('opacity-60', 'cursor-not-allowed');
+
+    try {
+      // In production: await fetch('/api/contact', { method: 'POST', body: new FormData(form) })
+      // For MVP static demo, simulate success:
+      await new Promise((r) => setTimeout(r, 800));
+      successEl?.classList.remove('hidden');
+      errorEl?.classList.add('hidden');
+      form.reset();
+    } catch {
+      errorEl?.classList.remove('hidden');
+      successEl?.classList.add('hidden');
+      submitBtn?.removeAttribute('disabled');
+      submitBtn?.classList.remove('opacity-60', 'cursor-not-allowed');
+    }
+  });
+</script>

@@ -1,0 +1,40 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Terms of Use"
+  description="Applied Robotics Lab terms of use — conditions for using the ARL website and products."
+  breadcrumbs={[{ label: 'Terms of Use', href: '/terms-of-use', i18nKey: 'terms.title' }]}
+>
+  <section class="section bg-navy-900">
+    <div class="container-narrow">
+      <h1 class="text-4xl font-black mb-8 text-slate-900" data-i18n="terms.title">Terms of Use</h1>
+      <p class="text-sm text-slate-500 mb-10" data-i18n="terms.last_updated">Last updated: July 1, 2026</p>
+      <div class="prose-arl space-y-6">
+        <p data-i18n="terms.intro">By using this website and ARL products, you agree to these terms.</p>
+
+        <h2 data-i18n="terms.h1">1. Use of Website</h2>
+        <p data-i18n="terms.p1">This website is provided for informational purposes. You may not use it for any unlawful purpose or in a way that damages, disables, or impairs ARL's services.</p>
+
+        <h2 data-i18n="terms.h2">2. Intellectual Property</h2>
+        <p data-i18n="terms.p2">All content, trademarks, and product names are owned by Applied Robotics Lab unless noted otherwise. Reproduction without written permission is prohibited.</p>
+
+        <h2 data-i18n="terms.h3">3. Products & Services</h2>
+        <p data-i18n="terms.p3">Product availability, pricing, and specifications are subject to change without notice. Use of ARL products is governed by separate license agreements provided at the time of access or download.</p>
+
+        <h2 data-i18n="terms.h4">4. Disclaimer of Warranties</h2>
+        <p data-i18n="terms.p4">This website and its content are provided "as is" without warranties of any kind. ARL does not guarantee accuracy, completeness, or uninterrupted availability.</p>
+
+        <h2 data-i18n="terms.h5">5. Limitation of Liability</h2>
+        <p data-i18n="terms.p5">ARL shall not be liable for indirect, incidental, or consequential damages arising from use of this website or ARL products, to the maximum extent permitted by applicable law.</p>
+
+        <h2 data-i18n="terms.h6">6. Governing Law</h2>
+        <p data-i18n="terms.p6">These terms are governed by the laws of Vietnam, without regard to conflict of law provisions.</p>
+
+        <h2 data-i18n="terms.h7">7. Contact</h2>
+        <p data-i18n-html="terms.p7.html">Questions about these terms? Email <a href="mailto:hello@arl.lab">hello@arl.lab</a>.</p>
+      </div>
+    </div>
+  </section>
+</PageLayout>

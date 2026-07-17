@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/home/Hero.astro';
+import FeaturedProducts from '@/components/home/FeaturedProducts.astro';
+import WorkflowHighlight from '@/components/home/WorkflowHighlight.astro';
+import Capabilities from '@/components/home/Capabilities.astro';
+import FeaturedResearch from '@/components/home/FeaturedResearch.astro';
+import ContactCTA from '@/components/home/ContactCTA.astro';
+import { getFeaturedProducts, getFeaturedResearch, getProductBySlug } from '@/lib/content';
+
+const featuredProducts = await getFeaturedProducts();
+const featuredResearch = await getFeaturedResearch();
+const workflowAgent = await getProductBySlug('workflow-agent');
+---
+
+<BaseLayout>
+  <Hero />
+  <FeaturedProducts products={featuredProducts} />
+  {workflowAgent && <WorkflowHighlight product={workflowAgent} />}
+  <Capabilities />
+  <FeaturedResearch items={featuredResearch} />
+  <ContactCTA />
+</BaseLayout>

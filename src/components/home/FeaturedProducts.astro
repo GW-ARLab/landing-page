@@ -1,0 +1,412 @@
+---
+import type { Product } from '@/lib/content';
+import { statusLabel, productSlug } from '@/lib/content';
+
+interface Props {
+  products: Product[];
+}
+const { products } = Astro.props;
+
+const categoryConfig: Record<string, { icon: string; color: string; gradientFrom: string; gradientTo: string; accentColor: string }> = {
+  'ai-automation':      { icon: '🤖', color: 'electric', gradientFrom: '#DBEAFE', gradientTo: '#EFF6FF', accentColor: 'rgba(37,99,235,0.15)'  },
+  'desktop-automation': { icon: '💻', color: 'electric', gradientFrom: '#DBEAFE', gradientTo: '#EFF6FF', accentColor: 'rgba(37,99,235,0.12)'  },
+  'robotics':           { icon: '🦾', color: 'spark',    gradientFrom: '#BAE6FD', gradientTo: '#E0F2FE', accentColor: 'rgba(14,165,233,0.15)'  },
+  '3d-printing':        { icon: '🖨️', color: 'violet',   gradientFrom: '#EDE9FE', gradientTo: '#F5F3FF', accentColor: 'rgba(124,58,237,0.12)'  },
+  'research-prototype': { icon: '🔬', color: 'green',    gradientFrom: '#DCFCE7', gradientTo: '#F0FDF4', accentColor: 'rgba(22,163,74,0.12)'   },
+};
+
+function getPrimaryConfig(categories: string[]) {
+  for (const cat of categories) {
+    if (categoryConfig[cat]) return categoryConfig[cat];
+  }
+  return { icon: '⚙️', color: 'electric', gradientFrom: '#F97316', gradientTo: '#EA580C', accentColor: 'rgba(249,115,22,0.3)' };
+}
+
+function getCtaClass(color: string) {
+  if (color === 'spark') {
+    return 'bg-[#D97706] hover:bg-[#B45309] focus-visible:ring-amber-500 shadow-amber-500/10 text-white';
+  }
+  if (color === 'violet') {
+    return 'bg-[#7C3AED] hover:bg-[#6D28D9] focus-visible:ring-violet-500 shadow-violet-500/10 text-white';
+  }
+  if (color === 'green') {
+    return 'bg-[#16A34A] hover:bg-[#15803D] focus-visible:ring-emerald-500 shadow-emerald-500/10 text-white';
+  }
+  return 'bg-[#2563EB] hover:bg-[#1D4ED8] focus-visible:ring-blue-500 shadow-blue-500/10 text-white';
+}
+
+const ctaI18nKey: Record<string, string> = {
+  'Request Early Access': 'cta.request-access',
+  'Request a Quote': 'cta.request-quote',
+  'Research Partnership': 'cta.research-partnership',
+};
+---
+
+<section class="section bg-slate-50 relative overflow-hidden" id="products">
+  <div class="glow-blue w-[600px] h-[600px] -top-20 -right-40 opacity-15" aria-hidden="true"></div>
+
+  <!-- Divider -->
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" aria-hidden="true"></div>
+
+  <div class="container-wide relative z-10">
+    <!-- Section header -->
+    <div class="text-center mb-10 lg:mb-14">
+      <div class="section-label justify-center mb-3">
+        <span data-i18n="products.label">Sản phẩm</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-4" data-i18n-html="products.h2.html">
+        Công cụ được xây dựng cho<br/><span class="text-gradient-electric">thế giới thực</span>
+      </h2>
+      <p class="text-slate-500 text-lg max-w-xl mx-auto" data-i18n="products.sub">
+        Công cụ thực tiễn từ nghiên cứu ứng dụng — không chỉ là demo, mà là hệ thống thực sự bạn có thể sử dụng ngay hôm nay.
+      </p>
+    </div>
+
+    <!-- Product grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {products.map((product, i) => {
+        const ctaLabel = product.data.primaryCta?.label ?? 'Learn More';
+        const ctaUrl = product.data.primaryCta?.url ?? `/products/${productSlug(product)}`;
+        const cfg = getPrimaryConfig(product.data.categories);
+        const ctaKey = product.data.primaryCta?.label ? ctaI18nKey[product.data.primaryCta.label] : null;
+
+        return (
+          <article 
+            class="product-card group relative flex flex-col" 
+            style={`--card-accent: ${cfg.accentColor}; --grad-from: ${cfg.gradientFrom}; --grad-to: ${cfg.gradientTo}; --card-hover-color: var(--color-${cfg.color});`}
+          >
+            <!-- Animated border glow on hover -->
+            <div class="product-card__border-glow" aria-hidden="true"></div>
+
+            <!-- Card inner content -->
+            <div class="product-card__inner flex flex-col flex-1">
+
+              <!-- Hero image area -->
+              <div class="product-card__hero relative overflow-hidden">
+                <img
+                  src={`/images/products/${productSlug(product)}/thumbnail.png`}
+                  alt={`${product.data.name} preview`}
+                  class="product-card__thumb"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <!-- Floating category emoji badge -->
+                <div class="product-card__emoji-badge" aria-hidden="true">
+                  <span>{cfg.icon}</span>
+                </div>
+              </div>
+
+              <!-- Category tags -->
+              <div class="product-card__tags">
+                {product.data.categories.slice(0, 2).map((cat) => {
+                  const catCfg = categoryConfig[cat];
+                  let textColor = '#475569';
+                  let borderColor = 'rgba(15, 23, 42, 0.08)';
+                  let bg = 'rgba(15, 23, 42, 0.05)';
+                  
+                  if (catCfg) {
+                    bg = catCfg.gradientFrom;
+                    if (catCfg.color === 'electric') {
+                      textColor = '#1E40AF';
+                      borderColor = '#DBEAFE';
+                    } else if (catCfg.color === 'spark') {
+                      textColor = '#C2410C';
+                      borderColor = '#FFEDD5';
+                    } else if (catCfg.color === 'violet') {
+                      textColor = '#6D28D9';
+                      borderColor = '#EDE9FE';
+                    } else if (catCfg.color === 'green') {
+                      textColor = '#15803D';
+                      borderColor = '#DCFCE7';
+                    }
+                  }
+
+                  return (
+                    <span 
+                      class="product-card__tag"
+                      style={`background-color: ${bg}; color: ${textColor}; border-color: ${borderColor};`}
+                    >
+                      <span class="product-card__tag-dot" style={`background-color: ${textColor};`}></span>
+                      <span data-i18n={`category.${cat}`}>{cat.replace(/-/g, ' ')}</span>
+                    </span>
+                  );
+                })}
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 flex flex-col">
+                <!-- Title row -->
+                <div class="flex items-start justify-between gap-3 mb-2">
+                  <h3 class="product-card__title">
+                    <a 
+                      href={`/products/${productSlug(product)}`} 
+                      class="after:absolute after:inset-0 after:rounded-3xl focus-visible:outline-none"
+                      data-i18n={`product.${productSlug(product)}.name`}
+                    >
+                      {product.data.name}
+                    </a>
+                  </h3>
+                  <span 
+                    class:list={[
+                      'flex-shrink-0 mt-0.5',
+                      product.data.status === 'available'   ? 'badge-available'   :
+                      product.data.status === 'beta'        ? 'badge-beta'        :
+                      product.data.status === 'coming-soon' ? 'badge-coming-soon' :
+                      product.data.status === 'research'    ? 'badge-research'    :
+                      'badge-archived'
+                    ]}
+                    data-i18n={`status.${product.data.status}`}
+                  >
+                    {statusLabel(product.data.status)}
+                  </span>
+                </div>
+
+                <p 
+                  class="product-card__desc"
+                  data-i18n={`product.${productSlug(product)}.desc`}
+                >
+                  {product.data.shortDescription}
+                </p>
+
+                <!-- Platforms -->
+                {product.data.platforms.length > 0 && (
+                  <div class="product-card__platforms">
+                    {product.data.platforms.map((p) => (
+                      <span class="product-card__platform-tag">
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <!-- Actions Group -->
+                <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between gap-4 relative z-10">
+                  <a 
+                    href={`/products/${productSlug(product)}`} 
+                    class="product-card__learn-more text-sm font-semibold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1.5 transition-colors group/link py-1"
+                  >
+                    <span data-i18n="cap.learn.more">Learn More</span>
+                    <svg class="w-4 h-4 transition-transform duration-200 group-hover/link:translate-x-1 text-slate-400 group-hover/link:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </a>
+                  
+                  <a 
+                    href={ctaUrl} 
+                    class={`product-card__cta inline-flex items-center justify-center gap-1.5 px-4 h-10 rounded-xl font-semibold text-xs transition-all duration-300 shadow-sm hover:shadow-md ${getCtaClass(cfg.color)}`}
+                  >
+                    <span data-i18n={ctaKey}>{ctaLabel}</span>
+                    <svg class="w-3 h-3 product-card__cta-arrow flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <!-- View all -->
+    <div class="text-center mt-12">
+      <a href="/products" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-500 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition-all duration-300 group/all shadow-sm">
+        <span data-i18n="products.cta.all">View all products</span>
+        <svg class="w-4 h-4 transition-transform duration-300 group-hover/all:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-card {
+    position: relative;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .product-card:hover {
+    transform: translateY(-8px);
+  }
+
+  .product-card__border-glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: 1.6rem;
+    padding: 1px;
+    background: rgba(15, 23, 42, 0.04);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    transition: background-color 0.4s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .product-card:hover .product-card__border-glow {
+    background: rgba(37, 99, 235, 0.15);
+  }
+
+  .product-card__inner {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    transition: box-shadow 0.4s ease, border-color 0.4s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card:hover .product-card__inner {
+    border-color: rgba(15, 23, 42, 0.12);
+    box-shadow: 0 20px 40px -15px var(--card-accent), 0 1px 3px rgba(0, 0, 0, 0.02);
+  }
+
+  .product-card__hero {
+    position: relative;
+    height: 190px;
+    border-radius: 1.125rem;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    background: linear-gradient(135deg, var(--grad-from), var(--grad-to));
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  .product-card__thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .product-card:hover .product-card__thumb {
+    transform: scale(1.06);
+  }
+
+  .product-card__emoji-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    z-index: 2;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+  }
+  .product-card:hover .product-card__emoji-badge {
+    transform: scale(1.1) rotate(8deg);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+  }
+
+  .product-card__title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    transition: color 0.3s ease;
+  }
+  .product-card:hover .product-card__title {
+    color: var(--card-hover-color);
+  }
+
+  .product-card__desc {
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .product-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .product-card__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+  }
+  .product-card__tag-dot {
+    display: inline-block;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .product-card__platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .product-card__platform-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #64748B;
+    background: rgba(15,23,42,0.04);
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 0.375rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* ── CTA animations ── */
+  .product-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .product-card__cta-arrow {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
+  }
+  .product-card:hover .product-card__cta-arrow {
+    transform: translateX(3px);
+  }
+
+  /* Staggered animation on load */
+  @media (prefers-reduced-motion: no-preference) {
+    .product-card {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: cardReveal 0.55s ease-out forwards;
+    }
+    .product-card:nth-child(1) { animation-delay: 0.05s; }
+    .product-card:nth-child(2) { animation-delay: 0.15s; }
+    .product-card:nth-child(3) { animation-delay: 0.25s; }
+    .product-card:nth-child(4) { animation-delay: 0.35s; }
+    .product-card:nth-child(5) { animation-delay: 0.45s; }
+    .product-card:nth-child(6) { animation-delay: 0.55s; }
+
+    @keyframes cardReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>

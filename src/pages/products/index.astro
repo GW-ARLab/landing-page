@@ -1,0 +1,215 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import { getPublishedProducts, statusLabel, productSlug } from '@/lib/content';
+
+const products = await getPublishedProducts();
+
+const categories = [
+  { value: 'all', label: 'All Products' },
+  { value: 'ai-automation', label: 'AI Automation' },
+  { value: 'robotics', label: 'Robotics' },
+  { value: '3d-printing', label: '3D Printing' },
+  { value: 'research-prototype', label: 'Research Prototype' },
+];
+---
+
+<PageLayout
+  title="Products"
+  description="ARL products — AI workflow automation, robotics systems, and 3D printing services. Built for real-world deployment."
+  breadcrumbs={[{ label: 'Products', href: '/products', i18nKey: 'nav.products' }]}
+>
+  <!-- Page Header -->
+  <section class="relative py-16 lg:py-24 bg-navy-900 overflow-hidden">
+    <div class="absolute inset-0 bg-grid-pattern opacity-50" aria-hidden="true"></div>
+    <div class="glow-blue w-[500px] h-[500px] -top-20 left-1/4 opacity-25" aria-hidden="true"></div>
+
+    <div class="container-wide relative z-10 text-center">
+      <div class="section-label justify-center mb-4" data-i18n="products.hero.label">Tất cả Sản phẩm</div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6" data-i18n-html="products.hero.h1.html">
+        Công cụ giúp <span class="text-gradient-electric">hoàn thành công việc</span>
+      </h1>
+      <p class="text-xl text-slate-600 max-w-2xl mx-auto" data-i18n="products.hero.desc">
+        Từ tự động hóa desktop bằng AI đến robot tự hành — 
+        practical systems for individuals, teams, and researchers.
+      </p>
+    </div>
+  </section>
+
+  <!-- Products section -->
+  <section class="section bg-navy-900">
+    <div class="container-wide">
+      <!-- Category filter -->
+      <div class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filter by category">
+        {categories.map((cat) => (
+          <button
+            data-category={cat.value}
+            data-i18n={`products.filter.${cat.value}`}
+            class:list={[
+              'px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-electric-400',
+              cat.value === 'all'
+                ? 'bg-electric-600 border-electric-500 text-white'
+                : 'bg-transparent border-slate-350 text-slate-600 hover:text-electric-600 hover:border-electric-500',
+            ]}
+            aria-pressed={cat.value === 'all' ? 'true' : 'false'}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      <!-- Products grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid">
+        {products.map((product) => (
+          <article
+            class="card group flex flex-col relative"
+            data-categories={product.data.categories.join(',')}
+          >
+            <!-- Status badge -->
+            <div class="absolute top-4 right-4 z-10">
+              <span 
+                data-i18n={`status.${product.data.status}`}
+                class:list={[
+                  product.data.status === 'available' ? 'badge-available' :
+                  product.data.status === 'beta' ? 'badge-beta' :
+                  product.data.status === 'coming-soon' ? 'badge-coming-soon' :
+                  product.data.status === 'research' ? 'badge-research' :
+                  'badge-archived'
+                ]}
+              >
+                {statusLabel(product.data.status)}
+              </span>
+            </div>
+
+            <!-- Product Image -->
+            <div class="h-44 bg-slate-100 rounded-lg mb-5 flex items-center justify-center border border-slate-200 group-hover:border-electric-500/20 transition-colors overflow-hidden relative">
+              {product.data.thumbnail ? (
+                <img 
+                  src={product.data.thumbnail} 
+                  alt={product.data.name} 
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                  data-i18n-alt={`product.${productSlug(product)}.name`}
+                />
+              ) : (
+                <div class="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center">
+                  <div class="absolute inset-0 bg-dot-pattern opacity-60"></div>
+                  <span class="relative text-5xl" aria-hidden="true">
+                    {product.data.categories[0] === 'robotics' ? '🦾' :
+                     product.data.categories.includes('3d-printing') ? '🖨️' : '🤖'}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <!-- Categories -->
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              {product.data.categories.map((cat) => (
+                <span 
+                  data-i18n={`category.${cat}`}
+                  class="text-xs px-2 py-0.5 rounded-full bg-electric-50 text-electric-700 border border-electric-100"
+                >
+                  {cat.replace(/-/g, ' ')}
+                </span>
+              ))}
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-900 group-hover:text-electric-600 transition-colors mb-2">
+              <a 
+                href={`/products/${productSlug(product)}`} 
+                class="after:absolute after:inset-0 after:rounded-xl"
+                data-i18n={`product.${productSlug(product)}.name`}
+              >
+                {product.data.name}
+              </a>
+            </h2>
+            <p 
+              class="text-slate-600 text-sm leading-relaxed mb-4 flex-1"
+              data-i18n={`product.${productSlug(product)}.desc`}
+            >
+              {product.data.shortDescription}
+            </p>
+
+            <!-- Platforms -->
+            {product.data.platforms.length > 0 && (
+              <div class="flex flex-wrap gap-1.5 mb-5 text-xs text-slate-500">
+                {product.data.platforms.map((p) => (
+                  <span>{p}</span>
+                ))}
+              </div>
+            )}
+
+            <!-- Use cases -->
+            {product.data.useCases.length > 0 && (
+              <ul class="mb-5 space-y-1">
+                {product.data.useCases.slice(0, 3).map((uc, idx) => (
+                  <li class="text-xs text-slate-600 flex items-center gap-1.5">
+                    <span class="text-electric-500">›</span>
+                    <span data-i18n={`product.${productSlug(product)}.usecase.${idx}`}>{uc}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <!-- CTAs -->
+            <div class="flex gap-3 relative z-10">
+              <a 
+                href={`/products/${productSlug(product)}`} 
+                class="btn-outline btn-sm flex-1 justify-center"
+                data-i18n="products.details"
+              >
+                Details
+              </a>
+              <a
+                href={product.data.primaryCta?.url ?? `/contact?product=${productSlug(product)}`}
+                class="btn-primary btn-sm flex-1 justify-center"
+                data-i18n={product.data.primaryCta?.label === 'Request Access' ? 'cta.request-access' : (product.data.primaryCta?.label === 'Request Quote' ? 'cta.request-quote' : 'products.get-access')}
+              >
+                {product.data.primaryCta?.label ?? 'Get Access'}
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="hidden text-center py-20 text-gray-500">
+        <p class="text-lg" data-i18n="products.empty">Chưa có sản phẩm nào trong danh mục này.</p>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  // Client-side category filter
+  const filterBtns = document.querySelectorAll('[data-category]');
+  const productCards = document.querySelectorAll<HTMLElement>('[data-categories]');
+  const emptyState = document.getElementById('empty-state');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cat = (btn as HTMLElement).dataset.category ?? 'all';
+
+      // Update button states
+      filterBtns.forEach((b) => {
+        const isActive = (b as HTMLElement).dataset.category === cat;
+        b.classList.toggle('bg-electric-600', isActive);
+        b.classList.toggle('border-electric-500', isActive);
+        b.classList.toggle('text-white', isActive);
+        b.classList.toggle('bg-transparent', !isActive);
+        b.classList.toggle('border-slate-300', !isActive);
+        b.classList.toggle('text-slate-600', !isActive);
+        b.setAttribute('aria-pressed', String(isActive));
+      });
+
+      // Filter cards
+      let visible = 0;
+      productCards.forEach((card) => {
+        const cats = card.dataset.categories?.split(',') ?? [];
+        const show = cat === 'all' || cats.includes(cat);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      emptyState?.classList.toggle('hidden', visible > 0);
+    });
+  });
+</script>

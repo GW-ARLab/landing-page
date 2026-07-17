@@ -1,0 +1,128 @@
+---
+import { footerLinks, siteConfig } from '@/lib/site';
+
+const groupI18nKey: Record<string, string> = {
+  Products: 'footer.group.products',
+  Solutions: 'footer.group.solutions',
+  Research: 'footer.group.research',
+  Lab: 'footer.group.company',
+};
+
+const linkI18nKey: Record<string, string> = {
+  'All Products': 'footer.link.all-products',
+  'Workflow Agent': 'footer.link.workflow',
+  '3D Printing': 'footer.link.printing',
+  'Autonomous Robot Vehicle': 'footer.link.robot',
+  'Desktop Automation': 'footer.link.desktop',
+  'Robotics Automation': 'footer.link.robotics',
+  'Zalo AI Agents': 'footer.link.zalo',
+  'Research Areas': 'footer.link.research-areas',
+  'AI Agents': 'footer.link.ai-agents',
+  'Autonomous Navigation': 'footer.link.nav',
+  'Computer Vision': 'footer.link.cv',
+  'About ARL': 'footer.link.about',
+  'Contact': 'footer.link.contact',
+  'Privacy Policy': 'footer.link.privacy',
+  'Terms of Use': 'footer.link.terms',
+};
+---
+
+<footer class="bg-slate-950 border-t border-white/5 relative overflow-hidden">
+  <!-- Glowing subtle blur for a high-tech finish that aligns with ContactCTA -->
+  <div class="absolute -bottom-40 left-1/3 w-[500px] h-[500px] rounded-full bg-blue-600/5 blur-[120px] pointer-events-none" aria-hidden="true"></div>
+
+  <div class="container-wide relative z-10 py-12 lg:py-16">
+    <!-- Top row -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-12">
+      <!-- Brand -->
+      <div class="lg:col-span-2">
+        <a href="/" class="inline-flex items-center gap-3 group mb-4" aria-label="Applied Robotics Lab">
+          <div class="relative w-8 h-8">
+            <div class="absolute inset-0 bg-electric-gradient rounded-lg rotate-6 opacity-80 group-hover:rotate-12 transition-transform duration-300"></div>
+            <div class="absolute inset-0 bg-slate-900 rounded-md border border-white/10 flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="3" fill="#3B82F6"/>
+                <path d="M9 2v2M9 14v2M2 9h2M14 9h2M4.22 4.22l1.42 1.42M12.36 12.36l1.42 1.42M4.22 13.78l1.42-1.42M12.36 5.64l1.42-1.42" stroke="#06B6D4" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <span class="font-bold text-white group-hover:text-slate-100 transition-colors">Applied <span class="text-gradient-electric">Robotics</span> Lab</span>
+        </a>
+        <p class="text-slate-400 text-sm leading-relaxed max-w-xs" data-i18n="footer.tagline">
+          Xây dựng hệ thống thông minh hoạt động trong thế giới thực. Tự động hóa AI, robot và nghiên cứu.
+        </p>
+        <div class="mt-5 flex items-center gap-3">
+          <!-- GitHub -->
+          <a
+            href={siteConfig.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label="ARL on GitHub (opens in new tab)"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </a>
+          <!-- Email -->
+          <a
+            href={`mailto:${siteConfig.email}`}
+            class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label={`Email ARL at ${siteConfig.email}`}
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Nav columns -->
+      {Object.entries(footerLinks).map(([group, links]) => (
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4" data-i18n={groupI18nKey[group]}>{group}</h3>
+          <ul class="space-y-2.5" role="list">
+            {links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-slate-400 hover:text-white transition-colors duration-150"
+                  data-i18n={linkI18nKey[link.label]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Bottom row -->
+    <div class="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-slate-500">
+        &copy; <span id="footer-year"></span> {siteConfig.name}. All rights reserved.
+      </p>
+      <div class="flex items-center gap-4">
+        <a href="/privacy-policy" class="text-xs text-slate-500 hover:text-white transition-colors" data-i18n="footer.privacy">Bảo mật</a>
+        <a href="/terms-of-use" class="text-xs text-slate-500 hover:text-white transition-colors" data-i18n="footer.terms">Diều khoản</a>
+        <!-- Back to top -->
+        <a
+          href="#top"
+          class="text-xs text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1"
+          aria-label="Back to top"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+          </svg>
+          <span data-i18n="footer.top">Lên đầu</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const yearEl = document.getElementById('footer-year');
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+</script>

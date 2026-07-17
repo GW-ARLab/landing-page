@@ -1,0 +1,21 @@
+{
+  "name": "arl-landing",
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "content:validate": "astro build --dry-run || true"
+  },
+  "dependencies": {
+    "astro": "^5.7.0",
+    "@astrojs/mdx": "^4.2.0",
+    "@astrojs/sitemap": "^3.3.0",
+    "@astrojs/tailwind": "^5.1.4",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

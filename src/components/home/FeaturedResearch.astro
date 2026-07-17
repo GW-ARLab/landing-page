@@ -1,0 +1,99 @@
+---
+import type { Research } from '@/lib/content';
+import { researchTypeLabel, formatDate, researchSlug } from '@/lib/content';
+
+interface Props {
+  items: Research[];
+}
+const { items } = Astro.props;
+
+const typeColors: Record<string, string> = {
+  'research-area':     'text-violet-700 bg-violet-50 border-violet-200',
+  project:             'text-electric-700 bg-electric-50 border-electric-200',
+  publication:         'text-green-700 bg-green-50 border-green-200',
+  'technical-article': 'text-amber-700 bg-amber-50 border-amber-200',
+  'open-source':       'text-sky-700 bg-sky-50 border-sky-200',
+};
+---
+
+<section class="section bg-slate-50 relative overflow-hidden" id="research">
+  <div class="glow-blue w-[500px] h-[500px] bottom-0 left-1/4 opacity-10" aria-hidden="true"></div>
+
+  <!-- Divider -->
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" aria-hidden="true"></div>
+
+  <div class="container-wide relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+      <!-- Left: header -->
+      <div class="lg:col-span-2">
+        <div class="section-label mb-4">
+          <span data-i18n="research.label">Nghiên cứu</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-5" data-i18n-html="research.h2.html">
+          Nghiên cứu <span class="text-gradient-electric">ứng dụng</span><br/>cho hệ thống thực
+        </h2>
+        <p class="text-slate-500 leading-relaxed mb-8" data-i18n="research.sub">
+          Nghiên cứu của chúng tôi thu hẹp khoảng cách giữa tiến bộ học thuật và triển khai thực tiễn — tập trung vào AI agent, điều hướng tự hành và thị giác máy tính.
+        </p>
+        <a href="/research" class="btn-primary">
+          <span data-i18n="research.cta">Khám phá Nghiên cứu</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Right: research cards -->
+      <div class="lg:col-span-3 space-y-4">
+        {items.map((item) => (
+          <article class="card relative group flex items-start gap-4">
+            <!-- Type badge -->
+            <div 
+              class:list={[
+                'badge flex-shrink-0 mt-0.5',
+                typeColors[item.data.type] ?? typeColors.project,
+              ]}
+              data-i18n={`research.type.${item.data.type}`}
+            >
+              {researchTypeLabel(item.data.type)}
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-slate-900 group-hover:text-electric-600 transition-colors mb-1">
+                <a 
+                  href={`/research/${researchSlug(item)}`} 
+                  class="after:absolute after:inset-0 after:rounded-xl"
+                  data-i18n={`research.${researchSlug(item)}.title`}
+                >
+                  {item.data.title}
+                </a>
+              </h3>
+              <p 
+                class="text-slate-500 text-sm line-clamp-2"
+                data-i18n={`research.${researchSlug(item)}.summary`}
+              >
+                {item.data.summary}
+              </p>
+
+              {/* Topics */}
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                {item.data.topics.slice(0, 3).map((topic) => (
+                  <span 
+                    class="text-xs text-slate-500 px-2 py-0.5 rounded bg-slate-100 border border-slate-200"
+                    data-i18n={`research.topic.${topic}`}
+                  >
+                    {topic.replace(/-/g, ' ')}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <svg class="w-4 h-4 text-slate-300 group-hover:text-electric-500 transition-colors flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

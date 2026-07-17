@@ -1,0 +1,314 @@
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Design Tokens ── */
+:root {
+  --color-bg-base:     #FFFFFF;
+  --color-bg-surface:  #F8FAFC;
+  --color-bg-card:     #FFFFFF;
+  --color-bg-elevated: #F1F5F9;
+
+  --color-text-primary:   #0F172A;
+  --color-text-secondary: #1E293B;
+  --color-text-muted:     #475569;
+  --color-text-subtle:    #94A3B8;
+
+  /* Brand accent — professional deep blue */
+  --color-electric:     #2563EB;
+  --color-electric-dim: #1D4ED8;
+  /* Warm amber — kept for primary CTAs only */
+  --color-spark:        #D97706;
+  --color-spark-dim:    #B45309;
+  --color-cyan:         #0EA5E9;
+  --color-green:        #16A34A;
+  --color-violet:       #7C3AED;
+
+  --color-border:       rgba(15, 23, 42, 0.10);
+  --color-border-hover: rgba(15, 23, 42, 0.22);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --shadow-glow-blue:  0 0 24px rgba(37,99,235,0.12);
+  --shadow-glow-spark: 0 0 24px rgba(217,119,6,0.10);
+  --shadow-card:       0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* ── Base ── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-900;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Focus visible */
+  :focus-visible {
+    @apply outline-none ring-2 ring-electric-500 ring-offset-2 ring-offset-navy-900;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-slate-900;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-base);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-electric);
+    border-radius: 3px;
+  }
+}
+
+/* ── Components ── */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white
+           bg-electric-600 hover:bg-electric-500 active:bg-electric-700
+           transition-all duration-200 shadow-lg hover:shadow-electric-500/25
+           focus-visible:ring-2 focus-visible:ring-electric-400;
+  }
+
+  .btn-spark {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white
+           bg-spark-500 hover:bg-spark-400 active:bg-spark-600
+           transition-all duration-200 shadow-lg hover:shadow-spark-500/25;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold
+           border border-electric-600/40 text-electric-600 bg-white
+           hover:bg-electric-600 hover:text-white hover:border-electric-600
+           transition-all duration-200;
+  }
+
+  .btn-outline-cyan {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold
+           border border-spark-500/50 text-spark-600 bg-white
+           hover:bg-spark-500 hover:text-white hover:border-spark-500
+           transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium
+           text-slate-600 hover:text-slate-900 hover:bg-slate-100
+           transition-all duration-200;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white border border-slate-200 rounded-xl p-6
+           transition-all duration-300
+           hover:border-electric-300 hover:shadow-md;
+  }
+
+  .card-spark {
+    @apply bg-white border border-slate-200 rounded-xl p-6
+           transition-all duration-300
+           hover:border-spark-300 hover:shadow-md;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-available {
+    @apply badge bg-green-50 text-green-700 border border-green-200;
+  }
+
+  .badge-beta {
+    @apply badge bg-blue-50 text-blue-700 border border-blue-200;
+  }
+
+  .badge-coming-soon {
+    @apply badge bg-amber-50 text-amber-700 border border-amber-200;
+  }
+
+  .badge-research {
+    @apply badge bg-violet-50 text-violet-700 border border-violet-200;
+  }
+
+  .badge-archived {
+    @apply badge bg-slate-100 text-slate-500 border border-slate-200;
+  }
+
+  /* Section Labels */
+  .section-label {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest
+           text-electric-600;
+  }
+
+  .section-label::before {
+    content: '';
+    @apply block w-4 h-px bg-electric-500;
+  }
+
+  /* Section container */
+  .section {
+    @apply py-20 lg:py-28;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Glow decorations — very subtle on light backgrounds */
+  .glow-blue {
+    @apply absolute rounded-full blur-3xl pointer-events-none;
+    background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+  }
+
+  .glow-spark {
+    @apply absolute rounded-full blur-3xl pointer-events-none;
+    background: radial-gradient(circle, rgba(217,119,6,0.05) 0%, transparent 70%);
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-slate-200;
+  }
+
+  /* Code inline */
+  .code-inline {
+    @apply px-1.5 py-0.5 rounded text-sm font-mono bg-slate-100 text-electric-700
+           border border-slate-200;
+  }
+
+  /* Prose for markdown content */
+  .prose-arl {
+    @apply text-slate-700 leading-relaxed;
+  }
+
+  .prose-arl h2 {
+    @apply text-2xl font-bold text-slate-900 mt-8 mb-4;
+  }
+
+  .prose-arl h3 {
+    @apply text-xl font-semibold text-slate-900 mt-6 mb-3;
+  }
+
+  .prose-arl p {
+    @apply mb-4 text-slate-700;
+  }
+
+  .prose-arl a {
+    @apply text-electric-600 hover:text-electric-700 underline underline-offset-4;
+  }
+
+  .prose-arl ul {
+    @apply list-disc pl-5 mb-4 space-y-1 text-slate-700;
+  }
+
+  .prose-arl ol {
+    @apply list-decimal pl-5 mb-4 space-y-1 text-slate-700;
+  }
+
+  .prose-arl code {
+    @apply code-inline;
+  }
+
+  .prose-arl pre {
+    @apply bg-slate-50 border border-slate-200 rounded-lg p-4 overflow-x-auto mb-4;
+  }
+
+  .prose-arl pre code {
+    @apply bg-transparent border-none p-0 text-slate-800;
+  }
+
+  .prose-arl blockquote {
+    @apply border-l-4 border-slate-300 pl-4 italic text-slate-500 my-4;
+  }
+
+  .prose-arl table {
+    @apply w-full border-collapse text-sm mb-4;
+  }
+
+  .prose-arl th {
+    @apply bg-slate-100 text-left px-4 py-2 border border-slate-200 font-semibold text-slate-800;
+  }
+
+  .prose-arl td {
+    @apply px-4 py-2 border border-slate-200 text-slate-700;
+  }
+}
+
+/* ── Utilities ── */
+@layer utilities {
+  /* Blue gradient — for section headings on light bg */
+  .text-gradient-electric {
+    background: linear-gradient(90deg, #2563EB, #3B82F6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-spark {
+    background: linear-gradient(90deg, #2563EB, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hero heading gradient — dark blue to mid blue */
+  .text-gradient-hero {
+    background: linear-gradient(135deg, #0F172A 0%, #1E40AF 50%, #2563EB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-gradient-electric {
+    border-image: linear-gradient(90deg, #2563EB, #60A5FA) 1;
+  }
+
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  }
+}

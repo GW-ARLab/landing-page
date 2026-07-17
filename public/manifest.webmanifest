@@ -1,0 +1,16 @@
+{
+  "name": "Applied Robotics Lab",
+  "short_name": "ARL",
+  "description": "Building intelligent systems that act in the real world.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0F1E",
+  "theme_color": "#0A0F1E",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

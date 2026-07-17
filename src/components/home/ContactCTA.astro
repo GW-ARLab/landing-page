@@ -1,0 +1,140 @@
+---
+// Contact CTA Section
+const inquiryLinks = [
+  {
+    icon: '🎯',
+    title: 'Request a Demo',
+    desc: 'See Workflow Agent or our robots in action.',
+    href: '/contact?type=request-demo',
+    cta: 'Schedule Demo',
+    variant: 'primary',
+    style: '--card-glow-color: rgba(37, 99, 235, 0.25); --card-border-hover: rgba(37, 99, 235, 0.5); --card-shadow-glow: rgba(37, 99, 235, 0.25);',
+  },
+  {
+    icon: '🤝',
+    title: 'Research Collaboration',
+    desc: 'Partner with ARL on joint research projects.',
+    href: '/contact?type=research-collaboration',
+    cta: 'Collaborate',
+    variant: 'outline',
+    style: '--card-glow-color: rgba(124, 58, 237, 0.25); --card-border-hover: rgba(124, 58, 237, 0.5); --card-shadow-glow: rgba(124, 58, 237, 0.25);',
+  },
+  {
+    icon: '🏢',
+    title: 'Enterprise Automation',
+    desc: 'Custom workflow automation for your business.',
+    href: '/contact?type=enterprise-workflow',
+    cta: 'Get in Touch',
+    variant: 'outline',
+    style: '--card-glow-color: rgba(245, 158, 11, 0.25); --card-border-hover: rgba(245, 158, 11, 0.5); --card-shadow-glow: rgba(245, 158, 11, 0.25);',
+  },
+];
+---
+
+<section class="section bg-slate-950 text-white relative overflow-hidden py-24" id="contact">
+  <!-- Glowing grid and radial blurs for deep tech look -->
+  <div class="absolute inset-0 bg-grid-pattern opacity-10" aria-hidden="true"></div>
+  <div class="absolute -top-40 left-1/4 w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute -bottom-40 right-1/4 w-[600px] h-[600px] rounded-full bg-violet-600/10 blur-[120px] pointer-events-none" aria-hidden="true"></div>
+
+  <div class="container-narrow relative z-10 text-center">
+    <div class="section-label justify-center mb-4">
+      <span data-i18n="contact.label">Bắt đầu</span>
+    </div>
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 text-white leading-tight" data-i18n-html="contact.h2.html">
+      Sẵn sàng làm việc<br/><span class="text-gradient-spark">cùng ARL?</span>
+    </h2>
+    <p class="text-slate-400 text-lg mb-16 max-w-2xl mx-auto" data-i18n="contact.sub">
+      Dù bạn muốn tự động hóa quy trình, khám phá quan hệ đối tác nghiên cứu, hay triển khai giải pháp robot — chúng tôi rất muốn nói chuyện.
+    </p>
+ 
+    <!-- Inquiry cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+      {inquiryLinks.map((link, idx) => (
+        <div 
+          class="contact-card group text-left"
+          style={link.style}
+        >
+          <!-- Hover ambient glow element inside card -->
+          <div class="contact-card__glow"></div>
+
+          <!-- Glassmorphic Icon badge -->
+          <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl mb-5 shadow-inner transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" aria-hidden="true">
+            {link.icon}
+          </div>
+
+          <h3 class="font-bold text-white mb-2 text-base transition-colors duration-300 group-hover:text-amber-300" data-i18n={`contact.card.${idx}.title`}>
+            {link.title}
+          </h3>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-6 flex-1" data-i18n={`contact.card.${idx}.desc`}>
+            {link.desc}
+          </p>
+
+          <a
+            href={link.href}
+            class:list={[
+              link.variant === 'primary' 
+                ? 'inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-[1.02] active:scale-98 transition-all duration-300 w-full' 
+                : 'inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-white/5 border border-white/12 hover:border-white/30 text-white hover:bg-white hover:text-slate-950 hover:scale-[1.02] active:scale-98 transition-all duration-300 w-full'
+            ]}
+            data-i18n={`contact.card.${idx}.cta`}
+          >
+            {link.cta}
+          </a>
+        </div>
+      ))}
+    </div>
+ 
+    <!-- General contact link -->
+    <p class="text-sm text-slate-400">
+      <span data-i18n="contact.other.q">Có câu hỏi khác?</span>{' '}
+      <a 
+        href="/contact" 
+        class="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-4 transition-colors" 
+        data-i18n="contact.other.link"
+      >
+        Gửi tin nhắn cho chúng tôi
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .contact-card {
+    position: relative;
+    background: rgba(30, 41, 59, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  .contact-card__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 120%, var(--card-glow-color), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .contact-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--card-border-hover);
+    box-shadow: 
+      0 12px 30px -10px rgba(0, 0, 0, 0.6), 
+      0 0 20px -2px var(--card-shadow-glow);
+  }
+  
+  .contact-card:hover .contact-card__glow {
+    opacity: 1;
+  }
+</style>

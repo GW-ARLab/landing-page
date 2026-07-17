@@ -1,0 +1,324 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import { getPublishedProducts, getProductBySlug, statusLabel, productSlug } from '@/lib/content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { getPublishedProducts, productSlug } = await import('@/lib/content');
+  const products = await getPublishedProducts();
+  return products.map((product) => ({
+    params: { slug: productSlug(product) },
+    props: { product },
+  }));
+};
+
+const { product } = Astro.props;
+const { Content } = await product.render();
+
+const statusClass =
+  product.data.status === 'available' ? 'badge-available' :
+  product.data.status === 'beta' ? 'badge-beta' :
+  product.data.status === 'coming-soon' ? 'badge-coming-soon' :
+  product.data.status === 'research' ? 'badge-research' :
+  'badge-archived';
+
+const featureIcons: Record<string, string> = {
+  chat: '💬', library: '📚', desktop: '🖥️', shield: '🔒',
+  brain: '🧠', platforms: '💻', printer: '🖨️', materials: '⚗️',
+  robot: '🤖', clock: '⏱️', file: '📄', tools: '🔧',
+  sensor: '📡', modular: '🧩', ros: '🔄', navigation: '🗺️',
+  open: '🌐', dashboard: '📊',
+};
+---
+
+<PageLayout
+  title={product.data.seo.title}
+  description={product.data.seo.description}
+  ogImage={product.data.ogImage}
+  breadcrumbs={[
+    { label: 'Products', href: '/products', i18nKey: 'nav.products' },
+    { label: product.data.name, href: `/products/${productSlug(product)}`, i18nKey: `product.${productSlug(product)}.name` },
+  ]}
+>
+  <!-- Product Hero -->
+  <section class="relative py-16 lg:py-24 bg-navy-900 overflow-hidden">
+    <div class="absolute inset-0 bg-grid-pattern opacity-50" aria-hidden="true"></div>
+    <div class="glow-blue w-[600px] h-[600px] top-0 left-0 opacity-20" aria-hidden="true"></div>
+    <div class="glow-spark w-[400px] h-[400px] top-0 right-0 opacity-15" aria-hidden="true"></div>
+
+    <div class="container-wide relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- Left: Info -->
+        <div>
+          <!-- Badges -->
+          <div class="flex items-center gap-3 mb-5">
+            <span class={statusClass} data-i18n={`status.${product.data.status}`}>{statusLabel(product.data.status)}</span>
+            {product.data.categories.map((cat) => (
+              <span 
+                data-i18n={`category.${cat}`}
+                class="text-xs px-2.5 py-0.5 rounded-full border border-electric-500/15 text-electric-700 bg-electric-50"
+              >
+                {cat.replace(/-/g, ' ')}
+              </span>
+            ))}
+          </div>
+
+          <h1 
+            class="text-4xl sm:text-5xl lg:text-6xl font-black mb-5 leading-tight text-slate-900"
+            data-i18n={`product.${productSlug(product)}.name`}
+          >
+            {product.data.name}
+          </h1>
+          <p 
+            class="text-xl text-slate-600 leading-relaxed mb-8"
+            data-i18n={`product.${productSlug(product)}.desc`}
+          >
+            {product.data.shortDescription}
+          </p>
+
+          <!-- Platforms -->
+          {product.data.platforms.length > 0 && (
+            <div class="flex flex-wrap items-center gap-2 mb-8">
+              <span class="text-sm text-slate-500" data-i18n="products.detail.available-on">Available on:</span>
+              {product.data.platforms.map((p) => (
+                <span class="inline-flex items-center gap-1.5 text-sm text-slate-700 px-3 py-1 rounded-lg bg-white border border-slate-200">
+                  <svg class="w-3.5 h-3.5 text-electric-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <rect x="2" y="3" width="20" height="14" rx="2" stroke-width="1.5"/>
+                    <path d="M8 21h8M12 17v4" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  {p}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <!-- CTAs -->
+          <div class="flex flex-wrap gap-4">
+            {product.data.primaryCta && (
+              <a 
+                href={product.data.primaryCta.url} 
+                class="btn-spark btn-lg"
+                data-i18n={product.data.primaryCta.label === 'Request Access' ? 'cta.request-access' : (product.data.primaryCta.label === 'Request Quote' ? 'cta.request-quote' : 'products.get-access')}
+              >
+                {product.data.primaryCta.label}
+              </a>
+            )}
+            {product.data.secondaryCta && (
+              <a 
+                href={product.data.secondaryCta.url} 
+                class="btn-outline btn-lg"
+                data-i18n={product.data.secondaryCta.label === 'Watch Demo' ? 'cta.watch-demo' : (product.data.secondaryCta.label === 'View Examples' ? 'cta.view-examples' : undefined)}
+              >
+                {product.data.secondaryCta.label}
+              </a>
+            )}
+          </div>
+        </div>
+
+        <!-- Right: Raw Image -->
+        <div class="relative">
+          <div class="absolute -inset-4 bg-electric-500/5 rounded-2xl blur-xl"></div>
+          <div class="relative h-72 lg:h-80 rounded-2xl border border-slate-200 overflow-hidden shadow-md">
+            {product.data.thumbnail ? (
+              <img 
+                src={product.data.thumbnail} 
+                alt={product.data.name} 
+                class="w-full h-full object-cover" 
+                data-i18n-alt={`product.${productSlug(product)}.name`}
+              />
+            ) : (
+              <div class="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center">
+                <div class="absolute inset-0 bg-dot-pattern opacity-60"></div>
+                <span class="relative text-8xl" aria-hidden="true">
+                  {product.data.categories[0] === 'robotics' ? '🦾' :
+                   product.data.categories.includes('3d-printing') ? '🖨️' : '🤖'}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  {product.data.features.length > 0 && (
+    <section class="section bg-navy-800/30" id="features">
+      <div class="container-wide">
+        <div class="text-center mb-10">
+          <div class="section-label justify-center mb-3"><span data-i18n="products.detail.features">Features</span></div>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900" data-i18n="products.detail.features.sub">What {product.data.name} can do</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {product.data.features.map((feature, idx) => (
+            <div class="card bg-white border border-slate-200">
+              <div class="text-2xl mb-3" aria-hidden="true">
+                {featureIcons[feature.icon ?? ''] ?? '⚙️'}
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1.5" data-i18n={`product.${productSlug(product)}.feature.${idx}.title`}>{feature.title}</h3>
+              <p class="text-slate-600 text-sm leading-relaxed" data-i18n={`product.${productSlug(product)}.feature.${idx}.desc`}>{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Use Cases -->
+  {product.data.useCases.length > 0 && (
+    <section class="section bg-navy-900" id="use-cases">
+      <div class="container-narrow">
+        <div class="text-center mb-10">
+          <div class="section-label justify-center mb-3"><span data-i18n="products.detail.usecases">Use Cases</span></div>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900" data-i18n="products.detail.usecases">Built for these workflows</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {product.data.useCases.map((uc, idx) => (
+            <div class="flex items-center gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="w-8 h-8 rounded-lg bg-electric-50 border border-electric-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-electric-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <span class="text-slate-700 text-sm font-medium" data-i18n={`product.${productSlug(product)}.usecase.${idx}`}>{uc}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Demo section -->
+  {product.data.media?.videoUrl && (
+    <section class="section bg-navy-800/30" id="demo">
+      <div class="container-narrow text-center">
+        <div class="section-label justify-center mb-3"><span data-i18n="products.detail.demo">Demo</span></div>
+        <h2 class="text-3xl font-black text-slate-900 mb-8" data-i18n="products.detail.demo.sub">See it in action</h2>
+        <div class="relative rounded-2xl overflow-hidden border border-electric-500/20 aspect-video bg-navy-900">
+          <p class="sr-only">Product demonstration video</p>
+          <!-- Video embed placeholder — redirect to contact since video doesn't exist yet -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <a 
+              href={`/contact?product=${productSlug(product)}&type=product-demo`}
+              class="flex items-center gap-3 px-6 py-3 rounded-full bg-electric-600 hover:bg-electric-500 text-white font-semibold transition-colors"
+              aria-label="Play demo video"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span data-i18n="products.detail.demo.watch">Watch Demo</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Detailed Specifications / Overview (relocated here) -->
+  <section class="section bg-navy-900" id="specifications">
+    <div class="container-wide">
+      <div class="bg-white border border-slate-200 rounded-2xl p-8 md:p-12 shadow-sm">
+        <div data-i18n-html={`product.${productSlug(product)}.overview.html`}>
+          <div class="prose-arl">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download / CTA -->
+  {(product.data.download?.enabled || product.data.primaryCta) && (
+    <section class="section bg-navy-800/30" id="download">
+      <div class="container-narrow text-center">
+        <div class="section-label justify-center mb-3"><span data-i18n="products.detail.get-started">Get Started</span></div>
+        {product.data.download?.enabled ? (
+          <>
+            <h2 class="text-3xl font-black text-slate-900 mb-4"><span data-i18n="products.detail.download">Download</span> {product.data.name}</h2>
+            {product.data.download.latestVersion && (
+              <p class="text-slate-500 mb-8">
+                Version {product.data.download.latestVersion}
+                {product.data.download.releaseDate && (
+                  <span> — Released {new Date(product.data.download.releaseDate).toLocaleDateString()}</span>
+                )}
+              </p>
+            )}
+            <div class="flex flex-wrap justify-center gap-4">
+              {product.data.download.windows?.url && (
+                <a href={product.data.download.windows.url} class="btn-primary btn-lg" download>
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.8"/>
+                  </svg>
+                  <span data-i18n="products.detail.download.windows">Download for Windows</span>
+                  {product.data.download.windows.size && (
+                    <span class="text-xs opacity-70">({product.data.download.windows.size})</span>
+                  )}
+                </a>
+              )}
+              {product.data.download.macos?.url && (
+                <a href={product.data.download.macos.url} class="btn-outline btn-lg" download>
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  <span data-i18n="products.detail.download.macos">Download for macOS</span>
+                  {product.data.download.macos.size && (
+                    <span class="text-xs opacity-70">({product.data.download.macos.size})</span>
+                  )}
+                </a>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 class="text-3xl font-black text-slate-900 mb-4" data-i18n="products.detail.ready">Ready to get started?</h2>
+            <p 
+              class="text-slate-600 mb-8 text-lg"
+              data-i18n={product.data.status === 'beta' ? 'products.detail.ready.beta' : (product.data.status === 'research' ? 'products.detail.ready.research' : 'products.detail.ready.other')}
+            >
+              {product.data.status === 'beta'
+                ? 'Join the beta program to get early access.'
+                : product.data.status === 'research'
+                ? 'Available to research partners and universities.'
+                : 'Contact us to learn more or request a demo.'}
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+              {product.data.primaryCta && (
+                <a 
+                  href={product.data.primaryCta.url} 
+                  class="btn-spark btn-lg"
+                  data-i18n={product.data.primaryCta.label === 'Request Access' ? 'cta.request-access' : (product.data.primaryCta.label === 'Request Quote' ? 'cta.request-quote' : 'products.get-access')}
+                >
+                  {product.data.primaryCta.label}
+                </a>
+              )}
+              {product.data.secondaryCta && (
+                <a 
+                  href={product.data.secondaryCta.url} 
+                  class="btn-outline btn-lg"
+                  data-i18n={product.data.secondaryCta.label === 'Watch Demo' ? 'cta.watch-demo' : (product.data.secondaryCta.label === 'View Examples' ? 'cta.view-examples' : undefined)}
+                >
+                  {product.data.secondaryCta.label}
+                </a>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- Bottom CTA -->
+  <section class="py-12 bg-navy-900 border-t border-electric-500/10">
+    <div class="container-narrow text-center">
+      <p class="text-slate-600 mb-6">
+        <span data-i18n="products.detail.questions">Have questions about product?</span> {product.data.name}?
+      </p>
+      <a href={`/contact?product=${productSlug(product)}`} class="btn-primary">
+        <span data-i18n="products.detail.contact-us">Contact Us</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+</PageLayout>

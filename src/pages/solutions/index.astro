@@ -1,0 +1,193 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+
+const solutions = [
+  {
+    id: 'desktop-automation',
+    icon: '⚡',
+    title: 'Desktop & Web Automation Workflows',
+    tagline: 'Stop clicking, start delegating.',
+    problem: 'Repetitive digital tasks consume hours every week — copying data, filling forms, processing files, extracting information from websites.',
+    audience: 'SMBs, office teams, operations staff, individual knowledge workers.',
+    solution: 'Workflow Agent brings AI-powered automation to your desktop — describe a task, it executes. No scripts. No plugins. Just results.',
+    product: { label: 'Workflow Agent', href: '/products/workflow-agent' },
+    useCases: [
+      'Automated data entry from email to spreadsheets',
+      'Browser-based research and data collection',
+      'Batch file processing and organization',
+      'Form filling and document generation',
+      'Scheduled report compilation',
+    ],
+    color: 'electric',
+  },
+  {
+    id: 'robotics',
+    icon: '🦾',
+    title: 'Robotics Automation',
+    tagline: 'Physical automation for real environments.',
+    problem: 'Manual processes in warehouses, labs, and manufacturing lines are slow, error-prone, and expensive to scale.',
+    audience: 'Manufacturers, research institutions, logistics companies, universities.',
+    solution: 'ARL designs and builds autonomous robotic systems tailored to your environment — using proven ROS 2 architecture and custom hardware.',
+    product: { label: 'Autonomous Robot Vehicle', href: '/products/autonomous-robot-vehicle' },
+    useCases: [
+      'Indoor autonomous navigation and mapping',
+      'Object detection and picking',
+      'Quality inspection with computer vision',
+      'Research platform deployment',
+      'Custom robotics integration projects',
+    ],
+    color: 'spark',
+  },
+  {
+    id: 'zalo-agents',
+    icon: '💬',
+    title: 'Zalo AI Agents',
+    tagline: 'AI-powered Zalo chatbots for Vietnamese business.',
+    problem: 'Businesses spend enormous time responding to repetitive customer inquiries on Zalo — Vietnam\'s most popular messaging platform.',
+    audience: 'Vietnamese SMBs, e-commerce stores, service companies using Zalo for customer communication.',
+    solution: 'ARL builds intelligent Zalo OA chatbots powered by AI — handling FAQs, order status, appointment booking, and escalation to humans.',
+    product: null,
+    useCases: [
+      'Automated FAQ and customer support',
+      'Order status and tracking integration',
+      'Appointment scheduling',
+      'Lead qualification and routing',
+      'Product recommendation',
+    ],
+    color: 'cyan',
+  },
+];
+
+const colorClasses: Record<string, { border: string; icon: string; badge: string }> = {
+  electric: {
+    border: 'border-electric-200 hover:border-electric-400',
+    icon: 'bg-electric-50 text-electric-600',
+    badge: 'bg-electric-50 text-electric-700 border-electric-200',
+  },
+  spark: {
+    border: 'border-spark-200 hover:border-spark-400',
+    icon: 'bg-spark-50 text-spark-600',
+    badge: 'bg-spark-50 text-spark-700 border-spark-200',
+  },
+  cyan: {
+    border: 'border-cyan-200 hover:border-cyan-400',
+    icon: 'bg-cyan-50 text-cyan-600',
+    badge: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+  },
+};
+---
+
+<PageLayout
+  title="Solutions"
+  description="ARL solutions for desktop automation, robotics integration, and Zalo AI agents — tailored for Vietnamese SMBs and enterprises."
+  breadcrumbs={[{ label: 'Solutions', href: '/solutions', i18nKey: 'solutions.title' }]}
+>
+  <!-- Hero -->
+  <section class="relative py-16 lg:py-24 bg-navy-900 overflow-hidden">
+    <div class="absolute inset-0 bg-grid-pattern opacity-50" aria-hidden="true"></div>
+    <div class="glow-blue w-[500px] h-[500px] top-0 right-1/4 opacity-20" aria-hidden="true"></div>
+
+    <div class="container-wide relative z-10 text-center">
+      <div class="section-label justify-center mb-4"><span data-i18n="solutions.hero.label">Solutions</span></div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 text-slate-900" data-i18n-html="solutions.hero.h1.html">
+        Solutions that<br />
+        <span class="text-gradient-electric">scale with you</span>
+      </h1>
+      <p class="text-xl text-slate-600 max-w-2xl mx-auto" data-i18n="solutions.hero.desc">
+        Whether you're automating office workflows, deploying robots, or building Zalo agents — 
+        we have the technology and expertise to deliver.
+      </p>
+    </div>
+  </section>
+
+  <!-- Solutions -->
+  {solutions.map((sol, i) => (
+    <section
+      id={sol.id}
+      class:list={[
+        'section relative overflow-hidden',
+        i % 2 === 0 ? 'bg-navy-900' : 'bg-navy-800/30',
+      ]}
+    >
+      <div class:list={[
+        'absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent to-transparent',
+        sol.color === 'electric' ? 'via-electric-500/25' :
+        sol.color === 'spark' ? 'via-spark-500/25' : 'via-cyan-500/25',
+      ]} aria-hidden="true"></div>
+
+      <div class="container-wide relative z-10">
+        <div class:list={[
+          'grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start',
+          i % 2 !== 0 ? 'lg:grid-flow-col-dense' : '',
+        ]}>
+          <!-- Content -->
+          <div class:list={[i % 2 !== 0 ? 'lg:col-start-2' : '']}>
+            <div class:list={['inline-flex items-center justify-center w-14 h-14 rounded-2xl text-2xl mb-5', colorClasses[sol.color].icon]}>
+              {sol.icon}
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-black mb-3 text-slate-900" data-i18n={`solutions.${sol.id}.title`}>{sol.title}</h2>
+            <p class="text-xl text-slate-600 mb-6 font-medium" data-i18n={`solutions.${sol.id}.tagline`}>{sol.tagline}</p>
+
+            <!-- Problem / Solution -->
+            <div class="space-y-4 mb-8">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1.5" data-i18n="solutions.problem.label">The Problem</div>
+                <p class="text-slate-600 text-sm leading-relaxed" data-i18n={`solutions.${sol.id}.problem`}>{sol.problem}</p>
+              </div>
+              <div class:list={['p-4 rounded-xl border', colorClasses[sol.color].border, 'bg-slate-50/50']}>
+                <div class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1.5" data-i18n="solutions.solution.label">The ARL Solution</div>
+                <p class="text-slate-600 text-sm leading-relaxed" data-i18n={`solutions.${sol.id}.solution`}>{sol.solution}</p>
+              </div>
+            </div>
+
+            <!-- Target audience -->
+            <div class="mb-8">
+              <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold" data-i18n="solutions.audience.label">Audience: </span>
+              <span class="text-sm text-slate-650" data-i18n={`solutions.${sol.id}.audience`}>{sol.audience}</span>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex flex-wrap gap-4">
+              <a href={`/contact?type=enterprise-workflow&solution=${sol.id}`} class="btn-primary" data-i18n="solutions.discuss.cta">
+                Discuss Your Needs
+              </a>
+              {sol.product && (
+                <a href={sol.product.href} class="btn-outline" data-i18n="solutions.see.product">
+                  See Product
+                </a>
+              )}
+            </div>
+          </div>
+
+          <!-- Use cases card -->
+          <div class:list={[i % 2 !== 0 ? 'lg:col-start-1' : '']}>
+            <div class:list={['bg-white border rounded-2xl p-6 shadow-sm', colorClasses[sol.color].border]}>
+              <h3 class="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wide" data-i18n="solutions.usecases.label">Use Cases</h3>
+              <ul class="space-y-3">
+                {sol.useCases.map((uc, idx) => (
+                  <li class="flex items-start gap-3">
+                    <div class:list={['mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 border', colorClasses[sol.color].badge]}>
+                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                      </svg>
+                    </div>
+                    <span class="text-slate-700 text-sm" data-i18n={`solutions.${sol.id}.usecase.${idx}`}>{uc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- CTA -->
+  <section class="py-16 bg-navy-900 border-t border-electric-500/10">
+    <div class="container-narrow text-center">
+      <h2 class="text-3xl font-black mb-4 text-slate-900" data-i18n="solutions.footer.h2">Not sure which solution fits?</h2>
+      <p class="text-slate-600 mb-8" data-i18n="solutions.footer.desc">Tell us about your challenge and we'll recommend the right approach.</p>
+      <a href="/contact" class="btn-primary btn-lg" data-i18n="solutions.footer.cta">Contact ARL</a>
+    </div>
+  </section>
+</PageLayout>
