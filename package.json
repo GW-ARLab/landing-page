@@ -1,21 +1,34 @@
 {
-  "name": "arl-landing",
+  "name": "figma-make-app",
+  "private": true,
+  "version": "1.0.0",
   "type": "module",
-  "version": "0.1.0",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "content:validate": "astro build --dry-run || true"
+    "dev": "vite",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir cms-ssr",
+    "preview": "vite preview",
+    "format": "oxfmt",
+    "cms:dev": "node cms/server.mjs",
+    "cms:check": "pnpm run build && node --test cms/tests/*.test.mjs",
+    "cms:check-official-sheets": "node cms/check-official-sheets.mjs",
+    "cms:backup": "node cms/backup.mjs",
+    "cms:bootstrap-google": "node cms/bootstrap-google.mjs",
+    "cms:import-legal-drafts": "node cms/import-legal-drafts.mjs"
   },
   "dependencies": {
-    "astro": "^5.7.0",
-    "@astrojs/mdx": "^4.2.0",
-    "@astrojs/sitemap": "^3.3.0",
-    "@astrojs/tailwind": "^5.1.4",
-    "tailwindcss": "^3.4.17"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "oxfmt": "^0.2.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^8.0.5"
   }
 }
