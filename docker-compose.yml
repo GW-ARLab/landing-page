@@ -1,0 +1,17 @@
+services:
+  arl-cms:
+    build: .
+    container_name: arl-cms-backend
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    env_file:
+      - .env
+    volumes:
+      # Persistent storage for SQLite, uploads, candidates and releases
+      - arl_data:/app/cms-data
+      - arl_backups:/app/cms-backups
+
+volumes:
+  arl_data:
+  arl_backups:

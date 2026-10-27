@@ -1,0 +1,18 @@
+[Unit]
+Description=ARL Landing Page and CMS Backend
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/var/www/landing-page
+EnvironmentFile=/var/www/landing-page/.env
+ExecStart=/usr/bin/node cms/server.mjs
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
